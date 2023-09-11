@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import { interval, map, merge } from "rxjs";
+
 import "./App.css";
 import TweetList from "./components/TweetList";
 import Counter from "./components/Counter";
 import ToolBar from "./components/Toolbar";
+import Title from "./components/Title";
+import { loadTweets } from "./loadTweets";
 
 function App() {
   const [tweetsList, setTweets] = useState([]);
@@ -17,22 +19,6 @@ function App() {
     setLikedTweets([]);
   };
 
-  const createTweetSource = (frequency, account, attribute) => {
-    return interval(frequency).pipe(
-      map((i) => ({
-        account,
-        timestamp: Date.now(),
-        content: `${attribute} Tweet number ${i + 1}`,
-      }))
-    );
-  };
-
-  const tweets = merge(
-    createTweetSource(5000, "AwardsDarwin", "Facepalm"),
-    createTweetSource(3000, "iamdevloper", "Expert"),
-    createTweetSource(5000, "CommitStrip", "Funny")
-  );
-
   useEffect(() => {
     const interval = setInterval(() => {
       const filteredTweets = tweetsList.filter(
@@ -40,7 +26,7 @@ function App() {
       );
       setTweets(filteredTweets);
     }, 30000);
-    const subscription = tweets.subscribe((tweet) => {
+    const subscription = loadTweets().subscribe((tweet) => {
       setTweets((prevTweetsList) => [...prevTweetsList, tweet]);
     }, []);
 
@@ -52,7 +38,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Tweets App</h1>
+      <Title></Title>
       <ToolBar
         clearTweets={clearTweets}
         setShowLikedTweets={(value) => setShowLikedTweets(value)}
