@@ -1,4 +1,5 @@
 import "./TweetItem.css";
+
 function TweetItem(props) {
   const likeTweet = (props) => {
     if (!props.likedTweets?.includes(props.tweet.timestamp)) {
@@ -13,6 +14,7 @@ function TweetItem(props) {
       props.setLikedTweets(updatedLikedTweets);
     }
   };
+
   return (
     <li
       key={props.tweet.timestamp}

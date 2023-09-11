@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-
 import "./App.css";
 import TweetList from "./components/TweetList";
 import Counter from "./components/Counter";
