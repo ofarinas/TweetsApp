@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
-import TweetList from "./components/TweetList";
 import Counter from "./components/Counter";
-import ToolBar from "./components/Toolbar";
 import Title from "./components/Title";
+import ToolBar from "./components/Toolbar";
+import TweetList from "./components/TweetList";
 import { loadTweets } from "./loadTweets";
 
 function App() {
@@ -11,6 +11,7 @@ function App() {
   const [counter, setCounter] = useState(0);
   const [showLikedTweets, setShowLikedTweets] = useState(false);
   const [likedTweets, setLikedTweets] = useState([]);
+  const THIRTY_SECONDS = 30000;
 
   const clearTweets = () => {
     setTweets([]);
@@ -18,22 +19,44 @@ function App() {
     setLikedTweets([]);
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const filteredTweets = tweetsList.filter(
-        (tweet) => Date.now() - tweet.timestamp <= 30000
+  const removeTweetOlderThan30Seconds = () => {
+    setTweets((prevtweetsList) => {
+      const filteredTweets = prevtweetsList.filter(
+        (tweet) => Date.now() - tweet.timestamp <= THIRTY_SECONDS
       );
-      setTweets(filteredTweets);
-    }, 30000);
-    const subscription = loadTweets().subscribe((tweet) => {
-      setTweets((prevTweetsList) => [...prevTweetsList, tweet]);
-    }, []);
 
+      setLikedTweets((prevLikedTweetsList) =>
+        prevLikedTweetsList.filter((value) =>
+          filteredTweets.some(
+            (tweet) => tweet.timestamp + tweet.content === value
+          )
+        )
+      );
+
+      return filteredTweets;
+    });
+
+    setCounter(likedTweets.length);
+  };
+
+  useEffect(() => {
+    const interval = setInterval(
+      () => removeTweetOlderThan30Seconds(),
+      THIRTY_SECONDS
+    );
     return () => {
-      subscription.unsubscribe();
       clearInterval(interval);
     };
-  });
+  }, []);
+
+  useEffect(() => {
+    const subscription = loadTweets().subscribe((tweet) => {
+      setTweets((prevTweetsList) => [...prevTweetsList, tweet]);
+    });
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <div className="App">

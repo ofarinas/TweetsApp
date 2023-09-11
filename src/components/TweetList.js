@@ -12,13 +12,14 @@ function TweetList(props) {
       {props.tweets
         .filter((tweet) =>
           props.showLikedTweets
-            ? props.likedTweets.includes(tweet.timestamp)
+            ? props.likedTweets.includes(tweet.timestamp + tweet.content)
             : true
         )
         .sort((a, b) => b.timestamp - a.timestamp)
-        .map((tweet) => (
+        .map((tweet, index) => (
           <TweetItem
-            key={tweet.timestamp}
+            key={index}
+            id={index}
             tweet={tweet}
             likedTweets={props.likedTweets}
             setLikedTweets={(value) => props.setLikedTweets(value)}

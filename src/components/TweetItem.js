@@ -1,15 +1,17 @@
 import "./TweetItem.css";
 
 function TweetItem(props) {
+  const buildTweetId = (value) => value.tweet.timestamp + value.tweet.content;
+
   const likeTweet = (props) => {
-    if (!props.likedTweets?.includes(props.tweet.timestamp)) {
+    if (!props.likedTweets?.includes(buildTweetId(props))) {
       props.setLikedTweets((prevTweetsList) => [
         ...prevTweetsList,
-        props.tweet.timestamp,
+        buildTweetId(props),
       ]);
     } else {
       const updatedLikedTweets = props.likedTweets.filter(
-        (timestamp) => timestamp !== props.tweet.timestamp
+        (id) => id !== buildTweetId(props)
       );
       props.setLikedTweets(updatedLikedTweets);
     }
@@ -17,19 +19,19 @@ function TweetItem(props) {
 
   return (
     <li
-      key={props.tweet.timestamp}
+      key={props.id}
       className={`tweet-item ${
-        props.likedTweets?.includes(props.tweet.timestamp) ? "liked" : ""
+        props.likedTweets?.includes(buildTweetId(props)) ? "liked" : ""
       }`}
     >
       <p className="tweet-text">{props.tweet.content}</p>
       <button
         className={`like-button ${
-          props.likedTweets?.includes(props.tweet.timestamp) ? "liked" : ""
+          props.likedTweets?.includes(buildTweetId(props)) ? "liked" : ""
         }`}
         onClick={() => likeTweet(props)}
       >
-        {props.likedTweets?.includes(props.tweet.timestamp) ? "Unlike" : "Like"}
+        {props.likedTweets?.includes(buildTweetId(props)) ? "Unlike" : "Like"}
       </button>
     </li>
   );
