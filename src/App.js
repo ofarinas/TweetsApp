@@ -20,7 +20,7 @@ function App() {
     setLikedTweets([]);
   };
 
-  const removeTweetOlderThan30Seconds = () => {
+  const removeTweetsOlderThan30Seconds = () => {
     setTweets((prevtweetsList) => {
       const filteredTweets = prevtweetsList.filter(
         (tweet) => Date.now() - tweet.timestamp <= THIRTY_SECONDS
@@ -40,7 +40,7 @@ function App() {
 
   useEffect(() => {
     const interval = setInterval(
-      () => removeTweetOlderThan30Seconds(),
+      () => removeTweetsOlderThan30Seconds(),
       THIRTY_SECONDS
     );
     return () => {
