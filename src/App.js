@@ -28,9 +28,7 @@ function App() {
 
       setLikedTweets((prevLikedTweetsList) =>
         prevLikedTweetsList.filter((value) =>
-          filteredTweets.some(
-            (tweet) => buildTweetId(tweet) === value
-          )
+          filteredTweets.some((tweet) => buildTweetId(tweet) === value)
         )
       );
 
