@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import TweetItem from "./TweetItem";
 import "./TweetList.css";
+import { buildTweetId } from "../helpers";
 
 function TweetList(props) {
   useEffect(() => {
@@ -12,14 +13,14 @@ function TweetList(props) {
       {props.tweets
         .filter((tweet) =>
           props.showLikedTweets
-            ? props.likedTweets.includes(tweet.timestamp + tweet.content)
+            ? props.likedTweets.includes(buildTweetId(tweet))
             : true
         )
         .sort((a, b) => b.timestamp - a.timestamp)
-        .map((tweet, index) => (
+        .map((tweet) => (
           <TweetItem
-            key={index}
-            id={index}
+            key={buildTweetId(tweet)}
+            id={buildTweetId(tweet)}
             tweet={tweet}
             likedTweets={props.likedTweets}
             setLikedTweets={(value) => props.setLikedTweets(value)}

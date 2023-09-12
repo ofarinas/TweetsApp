@@ -5,6 +5,7 @@ import Title from "./components/Title";
 import ToolBar from "./components/Toolbar";
 import TweetList from "./components/TweetList";
 import { loadTweets } from "./loadTweets";
+import { buildTweetId } from "./helpers";
 
 function App() {
   const [tweetsList, setTweets] = useState([]);
@@ -28,7 +29,7 @@ function App() {
       setLikedTweets((prevLikedTweetsList) =>
         prevLikedTweetsList.filter((value) =>
           filteredTweets.some(
-            (tweet) => tweet.timestamp + tweet.content === value
+            (tweet) => buildTweetId(tweet) === value
           )
         )
       );
